@@ -1,0 +1,73 @@
+# Define functions for each state
+def idle():
+    print("In IDLE state")
+    if something:  # Replace 'something' with your condition
+        return "listen"
+    return "idle"
+
+def listen():
+    print("In LISTEN state")
+    if voice_command:  # Replace 'voice_command' with your condition
+        return "search"
+    return "idle"
+
+def search():
+    print("In SEARCH state")
+    if book_found:  # Replace 'book_found' with your condition
+        return "locate"
+    return "inform"
+
+def locate():
+    print("In LOCATE state")
+    if book_located:  # Replace 'book_located' with your condition
+        return "move"
+    return "inform"
+
+def move():
+    print("In MOVE state")
+    if book_reached:  # Replace 'book_reached' with your condition
+        return "pick"
+    return "move"
+
+def pick():
+    print("In PICK state")
+    if book_picked:  # Replace 'book_picked' with your condition
+        return "return"
+    return "pick"
+
+def return_():
+    print("In RETURN state")
+    if person_reached:  # Replace 'person_reached' with your condition
+        return "handover"
+    return "return"
+
+def handover():
+    print("In HANDOVER state")
+    if book_handed_over:  # Replace 'book_handed_over' with your condition
+        return "idle"
+    return "handover"
+
+def inform():
+    print("Informing the person that the book is not available")
+    return "idle"
+
+# Define the state transitions as a dictionary
+state_transitions = {
+    "idle": idle,
+    "listen": listen,
+    "search": search,
+    "locate": locate,
+    "move": move,
+    "pick": pick,
+    "return": return_,
+    "handover": handover,
+    "inform": inform,
+}
+
+# Initialize the FSM with the start state
+current_state = "idle"
+
+# Simulate the FSM
+while True:
+    next_state = state_transitions[current_state]()
+    current_state = next_state

@@ -1,0 +1,86 @@
+#include <Encoder.h> 
+
+// Define pin numbers for motor control
+const int leftMotorForwardPin = 2;
+const int leftMotorBackwardPin = 3;
+const int rightMotorForwardPin = 4;
+const int rightMotorBackwardPin = 5;
+
+// instances of the Encoder class for left and right encoders
+Encoder leftEncoder(6, 7);
+Encoder rightEncoder(8, 9);
+
+// Constants for robot's physical parameters
+const float wheelCircumference = 0.2;  // Adjust this to match your wheel size in meters
+const float countsPerRevolution = 360.0; // Adjust this based on your encoder's resolution
+
+void setup() {
+  // Initialize motor control pins as outputs
+  pinMode(leftMotorForwardPin, OUTPUT);
+  pinMode(leftMotorBackwardPin, OUTPUT);
+  pinMode(rightMotorForwardPin, OUTPUT);
+  pinMode(rightMotorBackwardPin, OUTPUT);
+}
+
+void loop() {
+  // Move the robot forward by 10 meters
+  moveForward(10);
+
+  // Turn the robot 90 degrees to the right
+  turnRight(90);
+}
+
+// Function to move the robot forward a specified distance in meters
+void moveForward(float distanceInMeters) {
+  long targetCounts = static_cast<long>(distanceInMeters / wheelCircumference * countsPerRevolution);
+
+  while (leftEncoder.read() < targetCounts && rightEncoder.read() < targetCounts) {
+    // Adjust motor speeds proportionally to the error between target and current encoder counts
+    float leftSpeed = 0.5;  // You may need to fine-tune these values
+    float rightSpeed = 0.5;
+
+    if (leftEncoder.read() > rightEncoder.read()) {
+      leftSpeed -= 0.1;
+      rightSpeed += 0.1;
+    } else {
+      leftSpeed += 0.1;
+      rightSpeed -= 0.1;
+    }
+
+    // Apply motor control based on the calculated speeds
+    analogWrite(leftMotorForwardPin, leftSpeed * 255);
+    analogWrite(leftMotorBackwardPin, 0);
+    analogWrite(rightMotorForwardPin, rightSpeed * 255);
+    analogWrite(rightMotorBackwardPin, 0);
+  }
+
+  // Stop the motors
+  analogWrite(leftMotorForwardPin, 0);
+  analogWrite(leftMotorBackwardPin, 0);
+  analogWrite(rightMotorForwardPin, 0);
+  analogWrite(rightMotorBackwardPin, 0);
+}
+
+// Function to turn the robot to the right by a specified angle in degrees
+void turnRight(float angleInDegrees) {
+  // Calculate the number of encoder counts needed for the turn
+  long targetCounts = static_cast<long>((angleInDegrees / 360) * countsPerRevolution * wheelCircumference / 2);
+
+  while (leftEncoder.read() < targetCounts && rightEncoder.read() < targetCounts) {
+    // Adjust motor speeds to make the robot turn right
+    float leftSpeed = 0.3;
+    float rightSpeed = -0.3;
+
+    // Apply motor control based on the calculated speeds
+    analogWrite(leftMotorForwardPin, leftSpeed * 255);
+    analogWrite(leftMotorBackwardPin, 0);
+    analogWrite(rightMotorForwardPin, rightSpeed * 255);
+    analogWrite(rightMotorBackwardPin, 0);
+  }
+
+  // Stop the motors
+  analogWrite(leftMotorForwardPin, 0);
+  analogWrite(leftMotorBackwardPin, 0);
+  analogWrite(rightMotorForwardPin, 0);
+  analogWrite(rightMotorBackwardPin, 0);
+}

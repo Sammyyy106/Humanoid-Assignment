@@ -1,0 +1,94 @@
+import multiprocessing
+import time
+
+# Define functions for each block
+def start():
+    print("Start")
+
+def voice_recognition_module():
+    print("Voice Recognition Module")
+
+def listen():
+    print("Listening for voice command")
+
+def database_search_module():
+    print("Database Search Module")
+
+def book_found():
+    print("Book found in the database")
+
+def vision_module():
+    print("Vision Module")
+
+def book_located():
+    print("Book located on the shelf")
+
+def navigation_module():
+    print("Navigation Module")
+
+def book_reached():
+    print("Book reached")
+
+def gripper_module():
+    print("Gripper Module")
+
+def book_picked():
+    print("Book picked")
+
+def handover():
+    print("Handover")
+
+def book_handed_over():
+    print("Book handed over")
+
+def inform():
+    print("Informing")
+
+def idle():
+    print("Idle")
+
+# Define state transitions
+transitions = {
+    start: [voice_recognition_module],
+    voice_recognition_module: [listen],
+    listen: [database_search_module, idle],
+    database_search_module: [book_found, vision_module],
+    vision_module: [book_located, idle],
+    book_located: [navigation_module, idle],
+    navigation_module: [book_reached, gripper_module],
+    gripper_module: [book_picked, handover],
+    book_picked: [navigation_module, handover],
+    handover: [book_handed_over, idle],
+    book_handed_over: [idle],
+    inform: [idle],
+    idle: [voice_recognition_module, idle],
+}
+
+# Function to execute a state
+def execute_state(state, event):
+    if event:
+        time.sleep(1)  # Simulate processing
+        next_states = transitions[state]
+        for next_state in next_states:
+            multiprocessing.Process(target=next_state).start()
+
+# Define the initial state
+current_state = start
+
+# Main loop
+while True:
+    print(f"Current state: {current_state.__name__}")
+
+    # Simulate an event (e.g., input or condition change)
+    event = input("Enter an event (Press Enter to continue, or type 'event' to trigger an event): ")
+    if event.lower() == "event":
+        execute_state(current_state, True)  # Trigger an event
+    else:
+        execute_state(current_state, False)  # No event, just continue
+
+    if current_state == idle:
+        input_event = input("Enter input event (e.g., voice_command, book_found, book_located, etc.): ")
+        if input_event == "voice_command":
+            current_state = voice_recognition_module
+        elif input_event == "no_voice_command":
+            current_state = idle

@@ -1,0 +1,57 @@
+const int ledPins[] = {2}; // LED pin for actuation
+
+String binaryInput = "0000";  // Initialize with 0000
+
+boolean isPrimeArray[] = {false, false, true, true, false, true, false, true, false, false, false, true, false, true, false, false};
+
+void setup() {
+  for (int i = 0; i < 4; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+  Serial.begin(9600);
+  Serial.println("Enter a 4-bit binary number (e.g., 1101):");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    binaryInput = Serial.readStringUntil('\n');  // Read the input from Serial Monitor
+    if (binaryInput.length() == 4) {
+      // Display the binary input on LEDs
+      digitalWrite(ledPins[0], binaryInput[0] - '0');
+      digitalWrite(ledPins[1], binaryInput[1] - '0');
+      digitalWrite(ledPins[2], binaryInput[2] - '0');
+      digitalWrite(ledPins[3], binaryInput[3] - '0');
+      int decimalValue = binaryToDecimal(binaryInput);
+
+      // Check if the input number is prime using the isPrimeArray
+      boolean isPrimeResult = isPrime(decimalValue);
+
+      // Actuate the LED based on whether the number is prime
+      digitalWrite(ledPins[0], isPrimeResult ? HIGH : LOW);
+
+      Serial.print("Decimal Value: ");
+      Serial.println(decimalValue);
+      Serial.print("Is Prime: ");
+      Serial.println(isPrimeResult ? "Yes" : "No");
+    } else {
+      Serial.println("Invalid input. Please enter a 4-bit binary number.");
+    }
+  }
+}
+
+int binaryToDecimal(String binary) {
+  int decimal = 0;
+  int base = 1;
+  decimal += (binary[3] - '0') * 1;
+  decimal += (binary[2] - '0') * 2;
+  decimal += (binary[1] - '0') * 4;
+  decimal += (binary[0] - '0') * 8;
+  return decimal;
+}
+
+boolean isPrime(int number) {
+  if (number < 0 || number > 15) {
+    return false; // Handle numbers outside the valid range.
+  }
+  return isPrimeArray[number];
+}

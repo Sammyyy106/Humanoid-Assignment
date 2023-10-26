@@ -1,0 +1,24 @@
+
+\\without  using for loop
+boolean isPrimeArray[] = {false, false, true, true, false, true, false, true, false, false, false, true, false, true, false, false};
+
+boolean isPrime(int number) {
+  if (number < 0 || number > 15) {
+    return false; // Handle numbers outside the valid range.
+  }
+  return isPrimeArray[number];
+} 
+
+
+\\using for loop
+boolean isPrime(int number) {
+  if (number <= 1) {
+    return false;
+  }
+  for (int i = 2; i < number; i++) {
+    if (number % i == 0) {
+      return false;
+    }
+  }
+  return true;
+}

@@ -1,0 +1,33 @@
+Start
+|
+Voice Recognition Module
+|
++-->[voice_command / listen()]-->Database Search Module
+Database Search Module
+|
++-->[book_found / Vision Module]
+|
++-->[book_not_found / inform()]-->Idle
+Vision Module
+|
++-->[book_located / Navigation Module]
+|
++-->[book_not_located / inform()]-->Idle
+Navigation Module
+|
++-->[book_reached / Gripper Module]
+|
++-->[person_reached / Handover]
+Gripper Module
+|
++-->[book_picked / Navigation Module]
+|
++-->[book_picked / Handover]
+Handover
+|
++-->[book_handed_over / do nothing]-->Idle
+Idle
+|
++-->[voice_command / Voice Recognition Module]
+|
++-->[no voice_command / do nothing]-->Idle

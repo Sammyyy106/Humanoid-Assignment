@@ -1,0 +1,36 @@
+const int ledPins[] = {2, 3, 4, 5};
+String binaryInput = "0000";  // Initialize with 0000
+
+void setup() {
+  for (int i = 0; i < 4; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+  Serial.begin(9600);
+  Serial.println("Enter a 4-bit binary number (e.g., 1101):");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    binaryInput = Serial.readStringUntil('\n');  // Read the input from Serial Monitor
+    if (binaryInput.length() == 4) {
+      for (int i = 0; i < 4; i++) {
+        digitalWrite(ledPins[i], binaryInput[i] - '0');  // Display the binary input on LEDs
+      }
+      int decimalValue = binaryToDecimal(binaryInput);
+      Serial.print("Decimal Value: ");
+      Serial.println(decimalValue);
+    } else {
+      Serial.println("Invalid input. Please enter a 4-bit binary number.");
+    }
+  }
+}
+
+int binaryToDecimal(String binary) {
+  int decimal = 0;
+  int base = 1;
+  for (int i = binary.length() - 1; i >= 0; i--) {
+    decimal += (binary[i] - '0') * base;
+    base *= 2;
+  }
+  return decimal;
+}

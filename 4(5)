@@ -1,0 +1,77 @@
+// Define pin numbers for motor control
+const int leftMotorForwardPin = 2;
+const int leftMotorBackwardPin = 3;
+const int rightMotorForwardPin = 4;
+const int rightMotorBackwardPin = 5;
+
+void setup() {
+  // Initialize motor control pins as outputs
+  pinMode(leftMotorForwardPin, OUTPUT);
+  pinMode(leftMotorBackwardPin, OUTPUT);
+  pinMode(rightMotorForwardPin, OUTPUT);
+  pinMode(rightMotorBackwardPin, OUTPUT);
+}
+
+void loop() {
+  // Move forward 10 meters
+  moveForward(10);
+
+  // Move 5 meters to the right
+  moveRight(5);
+
+  // Take a 360-degree turn
+  turnRight(360);
+}
+
+// Function to move the robot forward a specified distance in meters
+void moveForward(float distanceInMeters) {
+  // Set the motors to move forward
+  digitalWrite(leftMotorForwardPin, HIGH);
+  digitalWrite(leftMotorBackwardPin, LOW);
+  digitalWrite(rightMotorForwardPin, HIGH);
+  digitalWrite(rightMotorBackwardPin, LOW);
+
+  // Delay to simulate moving forward
+  delay(static_cast<unsigned long>(distanceInMeters * 1000)); // Assuming a constant speed
+
+  // Stop the motors
+  stopMotors();
+}
+
+// Function to move the robot to the right a specified distance in meters
+void moveRight(float distanceInMeters) {
+  // Set the motors to turn right
+  digitalWrite(leftMotorForwardPin, HIGH);
+  digitalWrite(leftMotorBackwardPin, LOW);
+  digitalWrite(rightMotorForwardPin, LOW);
+  digitalWrite(rightMotorBackwardPin, HIGH);
+
+  // Delay to simulate moving to the right
+  delay(static_cast<unsigned long>(distanceInMeters * 1000)); // Assuming a constant speed
+
+  // Stop the motors
+  stopMotors();
+}
+
+// Function to take a right turn by a specified angle in degrees
+void turnRight(float angleInDegrees) {
+  // Set the motors to turn right
+  digitalWrite(leftMotorForwardPin, HIGH);
+  digitalWrite(leftMotorBackwardPin, LOW);
+  digitalWrite(rightMotorForwardPin, LOW);
+  digitalWrite(rightMotorBackwardPin, HIGH);
+
+  // Delay to simulate a right turn
+  delay(static_cast<unsigned long>(angleInDegrees / 360 * 2000)); // Adjust the time for a full turn
+
+  // Stop the motors
+  stopMotors();
+}
+
+// Function to stop the motors
+void stopMotors() {
+  digitalWrite(leftMotorForwardPin, LOW);
+  digitalWrite(leftMotorBackwardPin, LOW);
+  digitalWrite(rightMotorForwardPin, LOW);
+  digitalWrite(rightMotorBackwardPin, LOW);
+}
